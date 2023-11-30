@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "advent2023", "advent2023.fsproj", "{5A19971F-A0FE-482E-BE99-8DF371F84A34}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{EC738EA1-C40C-4A8E-A7C1-8CB770984A91}"
+	ProjectSection(SolutionItems) = preProject
+		Gitignore = .gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A19971F-A0FE-482E-BE99-8DF371F84A34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A19971F-A0FE-482E-BE99-8DF371F84A34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A19971F-A0FE-482E-BE99-8DF371F84A34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A19971F-A0FE-482E-BE99-8DF371F84A34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
