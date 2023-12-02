@@ -13,7 +13,8 @@ let replace index selBy (s:string) = List.map (fun (on,r) -> (index s on,r) ) su
                                      |> List.filter (fun (x,_) -> x <> -1)
                                      |> function
                                         | [] -> s
-                                        | l -> l |> selBy fst |> s.Insert
+                                        | xs -> xs |> selBy fst |> s.Insert
+
 
 let part2 = Seq.map (replace first List.minBy >> replace last List.maxBy) >> part1
 
