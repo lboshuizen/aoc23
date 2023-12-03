@@ -3,11 +3,11 @@ module Day2
 let parse xs = let hand = parseRegex "\s(\d+)\s(\w+)" (fun a -> (int a[0],a[1]))
                let g = splitOn ':' xs
                let gi = g[0] |> parseRegex "Game (\d+)" (fun a -> int a[0])
-               let sec = g[1] |> splitOn ';' |> Seq.map (splitOn ',' >> Seq.map hand) |> Seq.concat
+               let sec = g[1] |> splitOnAny [';';','] |> Seq.map hand
                (gi,sec)
 
 let part1 =
-    let limit = Map.ofList [("red",12); ("green",13); ("blue",14)]
+    let limit = Map [("red",12); ("green",13); ("blue",14)]
     
     Seq.filter (snd >> Seq.forall (fun (n,c) -> n <= limit[c])) >> Seq.sumBy fst
 
