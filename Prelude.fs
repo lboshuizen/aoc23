@@ -19,12 +19,16 @@ let parseRegex regex map s =  Regex.Match(s,regex) |> fun m -> m.Groups
                               |> Seq.skip 1 // ignore first group
                               |> Seq.map (fun a -> a.Value) |> Array.ofSeq |> map
 
-let toGrid2d (xs:#seq<#seq<'a>>) : ((int * int) * 'a) list = 
-    let ri y = Seq.mapi (fun x a -> ((x,y),a)) >> List.ofSeq
-    xs |> Seq.mapi ri |> Seq.concat |> List.ofSeq
+type Grid<'a> = Map<int*int,'a>
+
+// parse lines to grid in col-row order
+let toGrid2d (xs:#seq<#seq<char>>) : ((int * int) * char) seq = 
+    let ri row = Seq.mapi (fun col a -> ((col,row),a))
+    xs |> Seq.mapi ri |> Seq.concat
 
 let delete (m:Map<_,_>) = Seq.fold (flip Map.remove) m
 
+// full scan around (x,y) omitting origin (0,0) 
 let around (x,y) = Seq.map (fun (x',y') -> (x+x',y+y') ) [(-1,-1);(-1,0);(-1,1);(0,-1);(0,1);(1,-1);(1,0);(1,1);]
 
 let mapSnd f (a,b) = (a,f b) 
