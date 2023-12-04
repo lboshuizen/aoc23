@@ -17,11 +17,11 @@
         <Content Include="inputs\day1.txt" />
         <Content Include="inputs\day2.txt" />
         <Content Include="inputs\day3.txt" />
-        <Content Include="inputs\day3tt.txt" />
         <Content Include="inputs\day4.txt" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
       <PackageReference Include="FSharpPlus" Version="1.5.0" />
     </ItemGroup>
 

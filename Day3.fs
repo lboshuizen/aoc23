@@ -6,12 +6,15 @@ let posIsDigit m xy = match Map.tryFind xy m with
                       | Some v when isDigit v -> true
                       | _ -> false
                       
+let rec startOfNum m r c = match posIsDigit m (c,r) with
+                            | true -> startOfNum m r (c-1)
+                            | _ -> c+1
+                      
 let partNumber (g:Grid<char>) (c,r) = let gridSize = 142
-                                      let numberFrom = Seq.map (fun p -> g[p]) >> seq2i
-                                      let pts = (List.takeWhile (posIsDigit g) ([for x' in 0..c-1 -> (x',r)] |> List.rev) |> List.rev)
-                                                @ [(c,r)]
-                                                @ List.takeWhile (posIsDigit g) [for x' in c+1..gridSize -> (x',r)]
-                                      r,numberFrom pts                           
+                                      let numberFrom = Seq.map (fun p -> g[p]) >> String.fromChars >> int
+                                      let sn = startOfNum g r c
+                                      let pts = Seq.takeWhile (posIsDigit g) (seq {for x' in sn..gridSize -> (x',r)})
+                                      r, numberFrom pts                           
 
 let collect m = let touched m = around >> Seq.filter (posIsDigit m) >> Seq.map (partNumber m) >> Seq.distinct >> Seq.map snd
                 Seq.map (touched m)

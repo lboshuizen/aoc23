@@ -1,24 +1,21 @@
 module Day4
 
-let winners w n = Set.intersect w n |> Seq.length
-let numbers = splitOn ' ' >> Seq.filter ( (<>) "" ) >> Seq.map int >> Set
-
-let parse s = let lr = s |> splitOn '|'
-              let c = lr[0] |> splitOn ':'
-              let g = c[0] |> parseRegex "Card\s+(\d+)" (fun a -> int a[0])
-              g,((winners (numbers lr[1]) (numbers c[1])),1)                                      
+let parse s = let left,right = s |> splitOn '|' |> Array.map allInt |> tuple
+              let winners n w = Set.intersect (Set w) (Set n) |> Seq.length
+              
+              left[0],(winners left[1..] right,1)                                      
 
 let part1 = let game = function
                        | _,(0,_) -> 0
                        | _,(n,_) -> pown 2 (n-1)
                              
-            Seq.map game >> Seq.sum
+            Seq.sumBy game
 
-let addCopies m (k,v) = update m k (mapSnd ((+) v))
+let addCopies m (k,v) = Map.update m k (mapSnd ((+) v))
 
 let winCopies cards = let f (m:Map<int,int*int>) cid =
-                         let w,c = m[cid]
-                         Seq.fold addCopies m [for nc in cid+1..cid+w do (nc,c)]
+                          let w,c = m[cid]
+                          Seq.fold addCopies m [for nc in cid+1..cid+w -> (nc,c)]
     
                       Seq.fold f cards [1..Map.count cards]
 
