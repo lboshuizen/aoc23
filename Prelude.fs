@@ -31,4 +31,8 @@ let delete (m:Map<_,_>) = Seq.fold (flip Map.remove) m
 // full scan around (x,y) omitting origin (0,0) 
 let around (x,y) = Seq.map (fun (x',y') -> (x+x',y+y') ) [(-1,-1);(-1,0);(-1,1);(0,-1);(0,1);(1,-1);(1,0);(1,1);]
 
-let mapSnd f (a,b) = (a,f b) 
+let mapSnd f (a,b) = (a,f b)
+
+let update (m:Map<_,_>) k f =  m |> Map.change k (fun x -> match x with
+                                                           | Some v -> Some (f v)
+                                                           | None -> None)
