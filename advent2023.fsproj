@@ -13,15 +13,18 @@
         <Compile Include="Day2.fs" />
         <Compile Include="Day3.fs" />
         <Compile Include="Day4.fs" />
+        <Compile Include="Day5.fs" />
         <Compile Include="Program.fs" />
         <Content Include="inputs\day1.txt" />
         <Content Include="inputs\day2.txt" />
         <Content Include="inputs\day3.txt" />
         <Content Include="inputs\day4.txt" />
+        <Content Include="inputs\day5.txt" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
+      <PackageReference Include="FSharp.Collections.ParallelSeq" Version="1.2.0" />
       <PackageReference Include="FSharpPlus" Version="1.5.0" />
     </ItemGroup>
 

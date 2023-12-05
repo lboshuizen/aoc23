@@ -36,10 +36,10 @@ type BDay3() =
 
     let data = readInput 3 |> Day3.parse
         
-    [<Benchmark>]
+    //[<Benchmark>]
     member _.Part1() = Day3.part1 data
     
-    [<Benchmark>]
+    //[<Benchmark>]
     member _.Part2() = Day3.part2 data
 
 
@@ -49,16 +49,16 @@ type BDay4() =
     let raw = readInput 4
     let data = Seq.map Day4.parse raw 
         
-    [<Benchmark>]
+    //[<Benchmark>]
     member _.Parse1() = Day4.parse raw[0]
 
-    [<Benchmark>]
+    //[<Benchmark>]
     member _.ParseAll() = List.map Day4.parse raw
 
             
-    [<Benchmark>]
+    //[<Benchmark>]
     member _.Part1() = Day4.part1 data
     
-    [<Benchmark>]
+    //[<Benchmark>]
     member _.Part2() = Day4.part2 data
     

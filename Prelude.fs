@@ -8,18 +8,27 @@ open System.Text.RegularExpressions
 let both f g x = (f x, g x)
 let flip f a b = f b a
 
-let foldl = Seq.fold
-
 let inline isDigit c = Char.IsDigit c
 let inline a2i (c:char) = int c - int '0'
 
+let foldl = Seq.fold
+let foldr f = flip (List.foldBack f) // Who(??) decided to give foldBack that crazy signature
+
 let splitOn (c:char) (s:string) = s.Split c
 let splitOnAny (del:#seq<char>) (s:string) = Seq.toArray del |> s.Split
+let splitWhen (pred:'a->bool) =
+    let splitter c (r,f) = match pred c with
+                           | true -> ([],r::f)
+                           | _ -> (c::r,f)
+                           
+    foldr splitter ([],[]) >> fun (r,f) -> r::f
+let splitOnEmpty = splitWhen ((=)"")
 
 let parseRegex regex map s =  Regex.Match(s,regex) |> fun m -> m.Groups
                               |> Seq.skip 1 // ignore first group
                               |> Seq.map (fun a -> a.Value) |> Array.ofSeq |> map
 let allInt = Regex(@"-?\d+").Matches >> Seq.map (fun m -> int m.Value) >> Array.ofSeq
+let allInt64 = Regex(@"-?\d+").Matches >> Seq.map (fun m -> int64 m.Value) >> Array.ofSeq
 
 type Grid<'a> = Map<int*int,'a>
 
