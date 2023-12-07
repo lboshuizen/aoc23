@@ -8,6 +8,8 @@ open System.Text.RegularExpressions
 let both f g x = (f x, g x)
 let flip f a b = f b a
 
+let swap (a,b) = (b,a)
+
 let inline isDigit c = Char.IsDigit c
 let inline a2i (c:char) = int c - int '0'
 
@@ -31,6 +33,13 @@ let allInt = Regex(@"-?\d+").Matches >> Seq.map (fun m -> int m.Value) >> Array.
 let allInt64 = Regex(@"-?\d+").Matches >> Seq.map (fun m -> int64 m.Value) >> Array.ofSeq
 
 type Grid<'a> = Map<int*int,'a>
+
+let compare = function
+              | a,b when a > b -> 1
+              | a,b when a < b  -> -1
+              | _ -> 0
+
+let Const x = fun _ -> x
 
 // parse lines to grid in col-row order
 let toGrid2d (xs:#seq<#seq<char>>) : ((int * int) * char) seq = 
@@ -61,3 +70,5 @@ module Map =
     let update (m:Map<_,_>) k f =  m |> Map.change k (set f)
 
     let delete (m:Map<_,_>) = Seq.fold (flip Map.remove) m
+    
+    let lookup (m:Map<_,_>) k = m[k]
