@@ -12,11 +12,11 @@ let rank h = match List.map snd h with
              | [2;1;1;1] -> 1
              | _         -> 0
 
-let hand vt merge xs = let values = xs |> Seq.map (Map.lookup vt)
-                       let r = values |> Seq.groupBy id |> Seq.map (mapSnd Seq.length) |> Seq.sortByDescending swap
-                               |> List.ofSeq |> merge |> rank
+let hand vt merge = let values = Seq.map (Map.lookup vt)
+                    let r = Seq.groupBy id >> Seq.map (mapSnd Seq.length) >> Seq.sortByDescending snd
+                            >> List.ofSeq >> merge >> rank
                  
-                       values, r 
+                    both values r 
 
 let parse vt f = Seq.map (splitOn ' ' >> fun a -> hand vt f a[0], a[1] |> String.fromChars |> int)
 
@@ -28,14 +28,12 @@ let game = Seq.sortWith ranker >> Seq.mapi (fun i (_,b) -> (i+1) * b) >> Seq.sum
 
 let part1 = parse cardValue id >> game
 
-let mergeJ h = match h |> Seq.tryFind (fst >> (=) 1) with
+let mergeJ h = match Seq.tryFind (fst >> (=) 'J') h with
                | None -> h
                | Some (_,l) when l = 5 -> h 
-               | Some (_,l) -> let c,n = List.find (fst >> (<>) 1) h
-                               let nh = (c,n+l) :: (h |> List.filter (fun (x,_) -> x <> 1 && x <> c))
-                               nh 
+               | Some (_,l) -> let (c,n)::t = List.filter (fst >> (<>) 'J') h
+                               (c,n+l)::t
 
 let part2 = parse cardValue2 mergeJ >> game
 
 let Solve : (string seq -> int*int) = both part1 part2 // (250957639, 251515496)
-
