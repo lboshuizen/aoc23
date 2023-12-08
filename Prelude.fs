@@ -24,6 +24,7 @@ let splitWhen (pred:'a->bool) =
                            | _ -> (c::r,f)
                            
     foldr splitter ([],[]) >> fun (r,f) -> r::f
+    
 let splitOnEmpty = splitWhen ((=)"")
 
 let parseRegex regex map s =  Regex.Match(s,regex) |> fun m -> m.Groups
@@ -58,8 +59,12 @@ let uncurry f (a,b) = f a b
 let tuple (a:IList<'a>) = (a[0],a[1])
 let triple (a:'a array) = (a[0],a[1],a[2])
 
+let rec gcd (a:int64) (b:int64) = if b = 0 then abs a else gcd (abs b) ((abs a) % abs b)
+let lcm a b = (a*b) / (gcd a b)
+
 module String =
     let fromChars : (seq<char> -> string) = String.Concat
+    let replace (xs:string seq) (r:string) (s:string) = Seq.fold (fun (s':string) c -> s'.Replace(c,r)) s xs
 
 module Map =
     
