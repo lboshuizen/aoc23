@@ -62,6 +62,11 @@ let triple (a:'a array) = (a[0],a[1],a[2])
 let rec gcd (a:int64) (b:int64) = if b = 0 then abs a else gcd (abs b) ((abs a) % abs b)
 let lcm a b = (a*b) / (gcd a b)
 
+let tap a = printfn $"%A{a}"
+            a
+
+let until p f i = Seq.scan f i >> Seq.takeWhile (p >> not)
+
 module String =
     let fromChars : (seq<char> -> string) = String.Concat
     let replace (xs:string seq) (r:string) (s:string) = Seq.fold (fun (s':string) c -> s'.Replace(c,r)) s xs
