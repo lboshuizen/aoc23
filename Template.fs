@@ -1,9 +1,9 @@
 module DayXX
 
-let parse xs = xs
+let parse = id
 
 let part1 = id
 
 let part2 _ = None
 
-let Solve xs = xs |> parse |> both part1 part2
+let Solve (xs:string seq) = xs |> parse |> both part1 part2

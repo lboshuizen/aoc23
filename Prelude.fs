@@ -65,6 +65,16 @@ let lcm a b = (a*b) / (gcd a b)
 let tap a = printfn $"%A{a}"
             a
 
+let biMap f (a,b) = f a,f b
+
+let rec iterate f x =
+        seq {
+            yield x
+            yield! iterate f (f x)
+        }
+
+let infinite (a:'a) = iterate id a
+
 let until p f i = Seq.scan f i >> Seq.takeWhile (p >> not)
 
 module String =
@@ -82,3 +92,12 @@ module Map =
     let delete (m:Map<_,_>) = Seq.fold (flip Map.remove) m
     
     let lookup (m:Map<_,_>) k = m[k]
+
+    let entries (m:Map<_,_>) = m |> Seq.map (fun kv -> kv.Key,kv.Value)
+    
+    let draw size (m:Map<int*int,char>) =                                    
+         entries m |> Seq.sortBy (fst >> swap)
+         |> Seq.chunkBySize size
+         |> Seq.map (Seq.map snd >> String.fromChars)
+         |> Seq.iter (printfn "%s")
+         m
