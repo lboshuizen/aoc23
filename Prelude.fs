@@ -81,6 +81,14 @@ module String =
     let fromChars : (seq<char> -> string) = String.Concat
     let replace (xs:string seq) (r:string) (s:string) = Seq.fold (fun (s':string) c -> s'.Replace(c,r)) s xs
 
+let manhattan (x,y) (x',y') = abs (x-x') + abs (y-y')
+
+let combinations xs =
+    let rec go xs = match xs with
+                    | [] -> []
+                    | x::xs -> List.map (fun b -> (x,b)) xs @ go xs
+    go xs        
+
 module Map =
     
     let private set f = function
