@@ -1,4 +1,4 @@
-module Day3
+module Day03
 
 let parse = (toGrid2d >> Seq.filter (snd >> (<>) '.') >> Map)
 

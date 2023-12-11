@@ -1,4 +1,4 @@
-module Day7
+module Day07
 
 let cardValue = ['A'; 'K'; 'Q';'J';'T';'9';'8';'7';'6';'5';'4';'3';'2';'_'] |> Seq.rev |> Seq.mapi (fun i c -> (c,(i+1))) |> Map
 let cardValue2 = Map.update cardValue 'J' (Const 1)

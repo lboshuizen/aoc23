@@ -1,4 +1,4 @@
-module Day2
+module Day02
                               
 let parse xs = let hand = parseRegex "\s(\d+)\s(\w+)" (fun a -> (int a[0],a[1]))
                let g = splitOn ':' xs

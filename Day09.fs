@@ -1,4 +1,4 @@
-module Day9
+module Day09
 
 let parse = Seq.map allInt
 
@@ -10,4 +10,4 @@ let rec history xs = let ds = xs |> Seq.pairwise |> Seq.map (fun (a,b) -> b-a)
 let part1 = Seq.sumBy history
 let part2 =  Seq.sumBy (Seq.rev >> history)
 
-let Solve (xs:string seq) = xs |> parse |> both part1 part2
+let Solve : (string seq -> int*int) = parse >> both part1 part2 // 1641934234, 975 

@@ -5,10 +5,12 @@ open System
 open System.Collections.Generic
 open System.Text.RegularExpressions
 
-let both f g x = (f x, g x)
-let flip f a b = f b a
+let inline (++) (a,b) (a',b') = (a+a',b+b')
 
-let swap (a,b) = (b,a)
+let inline both f g x = (f x, g x)
+let inline flip f a b = f b a
+
+let inline swap (a,b) = (b,a)
 
 let inline isDigit c = Char.IsDigit c
 let inline a2i (c:char) = int c - int '0'
@@ -16,7 +18,7 @@ let inline a2i (c:char) = int c - int '0'
 let foldl = Seq.fold
 let foldr f = flip (List.foldBack f) // Who(??) decided to give foldBack that crazy signature
 
-let splitOn (c:char) (s:string) = s.Split c
+let inline splitOn (c:char) (s:string) = s.Split c
 let splitOnAny (del:#seq<char>) (s:string) = Seq.toArray del |> s.Split
 let splitWhen (pred:'a->bool) =
     let splitter c (r,f) = match pred c with
@@ -48,15 +50,15 @@ let toGrid2d (xs:#seq<#seq<char>>) : ((int * int) * char) seq =
     xs |> Seq.mapi ri |> Seq.concat
 
 // full scan around (x,y) omitting origin (0,0) 
-let around (x,y) = Seq.map (fun (x',y') -> (x+x',y+y') ) [(-1,-1);(-1,0);(-1,1);(0,-1);(0,1);(1,-1);(1,0);(1,1);]
+let around p = Seq.map ((++) p) [(-1,-1);(-1,0);(-1,1);(0,-1);(0,1);(1,-1);(1,0);(1,1)]
 
 let inline mapSnd f (a,b) = (a,f b)
 let inline mapFst f (a,b) = (f a, b)
 
 let curry f a b = f (a,b)
-let uncurry f (a,b) = f a b
+let uncurry f a2 = a2 ||> f
 
-let tuple (a:IList<'a>) = (a[0],a[1])
+let pair (a:IList<'a>) = (a[0],a[1])
 let triple (a:'a array) = (a[0],a[1],a[2])
 
 let rec gcd (a:int64) (b:int64) = if b = 0 then abs a else gcd (abs b) ((abs a) % abs b)
@@ -73,21 +75,19 @@ let rec iterate f x =
             yield! iterate f (f x)
         }
 
-let infinite (a:'a) = iterate id a
+let infinite s = Seq.initInfinite (fun _ -> s) |> Seq.concat
 
 let until p f i = Seq.scan f i >> Seq.takeWhile (p >> not)
 
-module String =
-    let fromChars : (seq<char> -> string) = String.Concat
-    let replace (xs:string seq) (r:string) (s:string) = Seq.fold (fun (s':string) c -> s'.Replace(c,r)) s xs
-
 let manhattan (x,y) (x',y') = abs (x-x') + abs (y-y')
 
-let combinations xs =
-    let rec go xs = match xs with
-                    | [] -> []
-                    | x::xs -> List.map (fun b -> (x,b)) xs @ go xs
-    go xs        
+let rec combinations = function
+                       | [] -> []
+                       | x::xs -> List.map (fun b -> (x,b)) xs @ combinations xs
+
+module String =
+    let fromChars : (seq<char> -> string) = String.Concat
+    let replace (what:string seq) (with':string) (s:string) = Seq.fold (fun (s':string) c -> s'.Replace(c,with')) s what
 
 module Map =
     
@@ -95,11 +95,15 @@ module Map =
                         | Some v -> Some (f v)
                         | None -> None
     
-    let update (m:Map<_,_>) k f =  m |> Map.change k (set f)
+    let update (m:Map<_,_>) k f =  Map.change k (set f) m
 
     let delete (m:Map<_,_>) = Seq.fold (flip Map.remove) m
+   
+    let inline hasKey (m:Map<_,_>) k = match Map.tryFind k m with
+                                       | None -> false
+                                       | _ -> true
     
-    let lookup (m:Map<_,_>) k = m[k]
+    let inline lookup (m:Map<_,_>) k = m[k]
 
     let entries (m:Map<_,_>) = m |> Seq.map (fun kv -> kv.Key,kv.Value)
     

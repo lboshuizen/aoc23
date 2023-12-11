@@ -1,6 +1,6 @@
-module Day4
+module Day04
 
-let parse s = let left,right = s |> splitOn '|' |> Array.map allInt |> tuple
+let parse s = let left,right = s |> splitOn '|' |> Array.map allInt |> pair
               let winners n w = Set.intersect (Set w) (Set n) |> Seq.length
               
               left[0],(winners left[1..] right,1)                                      

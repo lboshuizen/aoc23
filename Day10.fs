@@ -21,21 +21,17 @@ let patterns = [
                 '.',array2D [|[|'#'; '#'; '#'|]; [|'#'; '#'; '#'|]; [|'#'; '#'; '#'|]|]
                ] |> Map
 
+let expandPipes ((x,y),c) = [for x' in -1..1 do for y' in -1..1 -> (x',y')] |> Seq.map (fun (x',y') -> (3*x+x',3*y+y'),patterns[c][y'+1,x'+1])
+
 let parse = toGrid2d >> both (Seq.filter (snd >> (<>) '.') >> both (Seq.find (snd >> (=) 'S') >> fst) (Seq.map (fun (xy,c) -> xy,translate xy c) >> Map))
                              Map
 
-let lookup m p = Map.tryFind p m
-let canVisit m p = match lookup m p with
-                   | None -> false
-                   | _ -> true
+let next m p = match Map.lookup m p with
+               | [p'] -> p'
+               | xs -> xs |> Seq.filter (Map.hasKey m) |> Seq.head
 
-let move m p = match lookup m p with
-               | Some [p'] -> p'
-               | Some xs -> xs |> Seq.filter (canVisit m) |> Seq.head
-               | None -> failwith $"oops %A{p}"
-
-let walk m s =
-    let rec go m p a = match move m p with
+let findLoop m s =
+    let rec go m p a = match next m p with
                        | n when n=s -> p::a
                        | n -> go (Map.remove p m) n (p::a) 
 
@@ -44,19 +40,18 @@ let walk m s =
     
     [s;toStart] @ go (Map.remove toStart m) f1 []
 
-let part1 ((s,m),_) = walk m s |> Seq.length |> fun n -> n/2 
+let part1 ((s,m),_) = findLoop m s |> Seq.length |> flip (/) 2 
 
-let rec flood (x,y) m = let isVoid p = canVisit m p && (m[p] = '.' || m[p] = '#' )
-                        [(1,0);(-1,0);(0,1);(0,-1)] |> Seq.map (fun (x',y') -> (x+x'), (y+y'))
-                        |> Seq.filter isVoid |> Seq.fold (fun m' p -> flood p m') (Map.update m (x,y) (Const '@'))
+let rec flood xy m = let isVoid p = Map.hasKey m p && (m[p] = '.' || m[p] = '#' )
+
+                     [(1,0);(-1,0);(0,1);(0,-1)] |> Seq.map ((++)xy)
+                     |> Seq.filter isVoid |> Seq.fold (fun m' p -> flood p m') (Map.remove xy m)
 
 let ignoreJunk j v = v |> Map.keys |> Seq.filter (flip Set.contains j >> not) |> Seq.fold (fun m p -> Map.update m p (Const '.')) v
 
-let expandPipes ((x,y),c) = [for x' in -1..1 do for y' in -1..1 -> (x',y')] |> Seq.map (fun (x',y') -> (3*x+x',3*y+y'),patterns[c][y'+1,x'+1])
-
-let part2 ((s,m),v) = v |> ignoreJunk (walk m s |> Set)
+let part2 ((s,m),v) = v |> ignoreJunk (findLoop m s |> Set)
                         |> Map.entries |> Seq.collect expandPipes |> Map
                         |> flood (0,0)  
                         |> Map.entries |> Seq.filter (snd >> ((=)'#')) |> Seq.length |> flip (/) 9
 
-let Solve : (string seq -> int*int) = parse >> both part1 part2
+let Solve : (string seq -> int*int) = parse >> both part1 part2 //(6613, 511)

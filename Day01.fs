@@ -1,4 +1,4 @@
-module Day1
+module Day01
 
 let first (s:string) (i:string) = s.IndexOf(i)
 let last (s:string) (i:string) = s.LastIndexOf(i)

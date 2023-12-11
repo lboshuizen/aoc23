@@ -14,51 +14,60 @@ type BDay1() =
     let data = readInput 1
         
     //[<Benchmark>]
-    member _.Part1() = Day1.part1 data
+    member _.Part1() = Day01.part1 data
     
     //[<Benchmark>]
-    member _.Part2() = Day1.part2 data
+    member _.Part2() = Day01.part2 data
     
 [<MemoryDiagnoser>]
 type BDay2() =
 
-    let data = readInput 2 |> Seq.map Day2.parse
+    let data = readInput 2 |> Seq.map Day02.parse
         
     //[<Benchmark>]
-    member _.Part1() = Day2.part1 data
+    member _.Part1() = Day02.part1 data
     
     //[<Benchmark>]
-    member _.Part2() = Day2.part2 data
+    member _.Part2() = Day02.part2 data
     
     
 [<MemoryDiagnoser>]
 type BDay3() =
 
-    let data = readInput 3 |> Day3.parse
+    let data = readInput 3 |> Day03.parse
         
     //[<Benchmark>]
-    member _.Part1() = Day3.part1 data
+    member _.Part1() = Day03.part1 data
     
     //[<Benchmark>]
-    member _.Part2() = Day3.part2 data
+    member _.Part2() = Day03.part2 data
 
 
 [<MemoryDiagnoser>]
 type BDay4() =
 
     let raw = readInput 4
-    let data = Seq.map Day4.parse raw 
+    let data = Seq.map Day04.parse raw 
         
     //[<Benchmark>]
-    member _.Parse1() = Day4.parse raw[0]
+    member _.Parse1() = Day04.parse raw[0]
 
     //[<Benchmark>]
-    member _.ParseAll() = List.map Day4.parse raw
+    member _.ParseAll() = List.map Day04.parse raw
 
             
     //[<Benchmark>]
-    member _.Part1() = Day4.part1 data
+    member _.Part1() = Day04.part1 data
     
     //[<Benchmark>]
-    member _.Part2() = Day4.part2 data
+    member _.Part2() = Day04.part2 data
     
+ [<MemoryDiagnoser>]
+type BDay8() =
+    let data = readInput 8 |> Day08.parse 
+            
+    [<Benchmark>]
+    member _.Part1() = Day08.part1 data
+    
+    [<Benchmark>]
+    member _.Part2() = Day08.part2 data
